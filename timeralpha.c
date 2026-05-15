@@ -31,6 +31,7 @@ void initialize(struct display *pD);
 void rectangle(struct display *pD);
 SDL_FRect *numbers(struct display *pD, int c, int m);
 SDL_FRect *penger(struct display *pD, int c, int m);
+void ddisplayer(struct display *pD, int h, int m, int s);
 void displayer(struct display *pD, int h, int m, int s);
 void timer(struct display *pD, int s);
 void draw(struct display *pD, int s);
@@ -106,7 +107,7 @@ SDL_FRect *numbers(struct display *pD, int c, int m) {
   case 2:
     y = 190.0f;
     break;
-  case 3:
+  case 0:
     y = 380.0f;
     break;
   }
@@ -119,6 +120,45 @@ SDL_FRect *numbers(struct display *pD, int c, int m) {
 }
 
 void displayer(struct display *pD, int h, int m, int s) {
+  int h1 = h / 10;
+  int h2 = h % 10;
+  int m1 = m / 10;
+  int m2 = m % 10;
+  int s1 = s / 10;
+  int s2 = s % 10;
+
+  SDL_FRect H1 = {83.0f, 300.0f, 150.0f, 190.0f};
+  SDL_FRect H2 = {83.0f + 150.0f, 300.0f, 150.0f, 190.0f};
+  SDL_FRect C1 = {83.0f + 300.0f, 300.0f, 150.0f, 190.0f};
+  SDL_FRect M1 = {83.0f + 450.0f, 300.0f, 150.0f, 190.0f};
+  SDL_FRect M2 = {83.0f + 600.0f, 300.0f, 150.0f, 190.0f};
+  SDL_FRect C2 = {83.0f + 750.0f, 300.0f, 150.0f, 190.0f};
+  SDL_FRect S1 = {83.0f + 900.0f, 300.0f, 150.0f, 190.0f};
+  SDL_FRect S2 = {83.0f + 1050.0f, 300.0f, 150.0f, 190.0f};
+
+  for (int i = 0; i < 6; i++) {
+    SDL_RenderTexture(pD->renderer, pD->texture, numbers(pD, h1, i % 3), &H1);
+    SDL_RenderTexture(pD->renderer, pD->texture, numbers(pD, h2, i % 3), &H2);
+    SDL_RenderTexture(pD->renderer, pD->texture, numbers(pD, 10, i % 3), &C1);
+    SDL_RenderTexture(pD->renderer, pD->texture, numbers(pD, m1, i % 3), &M1);
+    SDL_RenderTexture(pD->renderer, pD->texture, numbers(pD, m2, i % 3), &M2);
+    SDL_RenderTexture(pD->renderer, pD->texture, numbers(pD, 10, i % 3), &C2);
+    SDL_RenderTexture(pD->renderer, pD->texture, numbers(pD, s1, i % 3), &S1);
+    SDL_RenderTexture(pD->renderer, pD->texture, numbers(pD, s2, i % 3), &S2);
+
+    SDL_RenderPresent(pD->renderer);
+
+    SDL_RenderClear(pD->renderer);
+
+    if (i == 6) {
+      usleep(166670);
+    } else {
+      usleep(166666);
+    }
+  }
+}
+
+/* void displayer(struct display *pD, int h, int m, int s) {
   int h1 = h / 10;
   int h2 = h % 10;
   int m1 = m / 10;
@@ -157,7 +197,7 @@ void displayer(struct display *pD, int h, int m, int s) {
       }
     }
   }
-}
+} */
 
 void timer(struct display *pD, int s) {
   while (s > 0 && !isthisclose(pD)) {
